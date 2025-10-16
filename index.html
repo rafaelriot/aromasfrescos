@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aromas Frescos - Venta de Perfumes</title>
+    <style>
+        /* Estilos Generales */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #F8F9FA;
+            color: #212529;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        /* Encabezado */
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .logo-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        .logo {
+            width: 100px;
+            height: 100px;
+            vertical-align: middle;
+        }
+        header h1 {
+            font-size: 2.8rem;
+            font-weight: 300;
+            vertical-align: middle;
+            margin: 0;
+            /* Aplicar degradado al texto */
+            background: linear-gradient(to right, #FFD1DC, #A2E1DB, #BBDEFB, #FFECB3, #C3E6CB);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: #333; /* Fallback color */
+        }
+        header p {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            color: #6c757d;
+        }
+
+        /* Cuadrícula de Productos */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        .product-card {
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+        .product-info {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .product-name {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin: 0 0 10px 0;
+            min-height: 58px;
+        }
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #212529;
+            margin-bottom: 20px;
+        }
+        .view-details-btn {
+            background-color: #A2E1DB; /* Pastel verde azulado */
+            color: #212529; /* Texto oscuro para buen contraste */
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-top: auto;
+            transition: background-color 0.3s ease;
+        }
+        .view-details-btn:hover {
+            background-color: #8FD0CA; /* Tono ligeramente más oscuro al pasar el mouse */
+        }
+        /* Pie de Página */
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
+            background-color: #FFFFFF;
+        }
+
+        /* Estilos de la Ventana Modal */
+        .modal {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .close-btn {
+            color: #aaa;
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #333;
+        }
+        .modal-img {
+            width: 50%;
+            max-width: 250px;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        .modal-description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="pastelGradientSVG" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FFD1DC;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#A2E1DB;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#BBDEFB;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M 50 10 C 70 20 80 40 75 60 C 70 80 40 90 25 70 C 20 50 30 20 50 10 Z" fill="url(#pastelGradientSVG)" stroke="none"/>
+                    <path d="M 50 15 Q 40 30 45 50 Q 50 70 60 85" fill="none" stroke="#FFECB3" stroke-width="4" opacity="0.8" stroke-linecap="round"/>
+                    <circle cx="50" cy="40" r="8" fill="#FFFFFF" opacity="0.9"/>
+                    <circle cx="50" cy="40" r="4" fill="#C3E6CB" opacity="0.8"/>
+                </svg>
+                <h1>Aromas Frescos</h1>
+            </div>
+            <p>Descubre tu esencia ideal</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="product-grid">
+
+                <div class="product-card" onclick="openModal('Perfume Cacharel Amor Amor', 'imagenes/amoramorcacharel.jpg', 'Una fragancia floral frutal para mujeres jóvenes. Sus notas de salida son grosellas negras, naranja y mandarina. El corazón es una mezcla de rosa, jazmín y lirio de los valles. El fondo cálido se compone de vainilla, almizcle blanco y ámbar gris.')">
+                    <img src="imagenes/amoramorcacharel.jpg" alt="Perfume Cacharel Amor Amor" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Perfume Cacharel Amor Amor Dama eau de Toilette</h2>
+                        <p class="product-price">$724.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('Altitude Swiss Army', 'imagenes/altitudevictorinox.jpg', 'Una fragancia amaderada aromática que evoca la frescura de los Alpes suizos. Abre con notas de cedro de Virginia y bayas de enebro. El corazón revela salvia y menta, mientras que el fondo se asienta sobre notas amaderadas.')">
+                    <img src="imagenes/altitudevictorinox.jpg" alt="Altitude Swiss Army" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Altitude 100 Ml Edt Spray Swiss Army Model</h2>
+                        <p class="product-price">$629.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+                
+                <div class="product-card" onclick="openModal('Perfume Nautica Voyage', 'imagenes/nauticavoyage.jpg', 'Una brisa marina fresca y salada. Las notas de salida son hojas verdes y manzana. El corazón se compone de mimosa y flor de loto, sobre una base de almizcle, cedro, musgo de roble y ámbar.')">
+                    <img src="imagenes/nauticavoyage.jpg" alt="Perfume Nautica Voyage" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Perfume Nautica Voyage Eau de Toilette 100 ml</h2>
+                        <p class="product-price">$419.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('Adidas Victory League', 'imagenes/victoryleagueadidas.jpg', 'Una fragancia oriental amaderada para hombres. Las notas de salida son bergamota, albahaca y hierba recién cortada. El corazón combina lavanda, pera y canela, con un fondo de cedro, vainilla y almizcle.')">
+                    <img src="imagenes/victoryleagueadidas.jpg" alt="Adidas Victory League" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Adidas Victory League 100Ml Edt Spray</h2>
+                        <p class="product-price">$220.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('Versace Red Jeans', 'imagenes/versacheredjeanswoman.jpg', 'Un aroma floral-frutal clásico. Inicia con notas de durazno, chabacano y fresia. El corazón es un bouquet de violeta, rosa y lirio de los valles. Finaliza con sándalo, almizcle y vainilla.')">
+                    <img src="imagenes/versacheredjeanswoman.jpg" alt="Versace Red Jeans" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Perfume Dama Versace Red Jeans</h2>
+                        <p class="product-price">$525.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('Calvin Klein In 2U', 'imagenes/ckonein2uamarillo.jpg', 'Una fragancia fresca y floral. Abre con toronja rosada y bergamota de Sicilia. El corazón mezcla orquídea y cactus blanco. La base es de ámbar, cedro rojo japonés y vainilla.')">
+                    <img src="imagenes/ckonein2uamarillo.jpg" alt="Calvin Klein In 2U for her" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Fragancia Calvin Klein In 2U for her 100 ml</h2>
+                        <p class="product-price">$715.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('Tommy Hilfiger Tommy Girl', 'imagenes/tommygirl.jpg', 'Un perfume floral frutal, enérgico y refrescante. Inicia con grosellas negras y camelia. El corazón es una explosión de limón y menta. El fondo se compone de sándalo y cedro.')">
+                    <img src="imagenes/tommygirl.jpg" alt="Tommy Hilfiger Tommy Girl" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Perfume Tommy Hilfiger Tommy Girl Dama 100 ml Edt Spray</h2>
+                        <p class="product-price">$701.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('Festival Vibes de Hollister', 'imagenes/hoilsterfestivalvibes.jpg', 'Una fragancia floral frutal que captura la energía de un festival. Con notas de salida de membrillo y bayas de goji. El corazón es de peonía rosa y osmanthus, y el fondo de madera de cachemira y almizcle.')">
+                    <img src="imagenes/hoilsterfestivalvibes.jpg" alt="Festival Vibes de Hollister" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Festival Vibes de Hollister para mujer - EDP en spray de 3.4 oz</h2>
+                        <p class="product-price">$562.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+                
+                <div class="product-card" onclick="openModal('Salvatore Ferragamo Incanto Charms', 'imagenes/incantocharms.jpg', 'Una fragancia floral frutal exótica. Abre con notas de maracuyá y madreselva. El corazón es de rosa turca y jazmín. La base se compone de notas amaderadas y almizcle.')">
+                    <img src="imagenes/incantocharms.jpg" alt="Salvatore Ferragamo Incanto Charms" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Salvatore Ferragamo Incanto Charms 100 Ml Edt Spray</h2>
+                        <p class="product-price">$581.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('CK One Shock', 'imagenes/ckoneshock.jpg', 'Una fragancia oriental especiada. Inicia con flor de pasionaria y amapola roja. El corazón es de chocolate mexicano, zarzamora y jazmín. La base cálida contiene pachulí, ámbar y almizcle.')">
+                    <img src="imagenes/ckoneshock.jpg" alt="CK One Shock" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">CK One Shock 100 Ml Edt Spray Calvin Klein</h2>
+                        <p class="product-price">$559.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('CK IN2U', 'imagenes/ckonein2uhim.jpg', 'Un aroma oriental floral para mujeres. Las notas de salida son pomelo rosado, bergamota de Sicilia y hojas de grosellero rojo. Las notas de corazón son cactus y orquídea. Las notas de fondo son ámbar, cedro rojo japonés y vainilla.')">
+                    <img src="imagenes/ckonein2uhim.jpg" alt="CK IN2U" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">CK IN2U Calvin Klein Eau De Toilette Spray 100ml/3.4oz</h2>
+                        <p class="product-price">$652.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('Narissa Ambre de Maison Alhambra', 'imagenes/narissaalhambra.jpg', 'Una fragancia ambarina y floral. Se caracteriza por sus notas luminosas de ámbar, ylang-ylang y flores blancas como el frangipani. El fondo es de cedro, vainilla y almizcle, creando una estela cálida y sensual.')">
+                    <img src="imagenes/narissaalhambra.jpg" alt="Narissa Ambre de Maison Alhambra" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Narissa Ambre de Maison Alhambra para mujer</h2>
+                        <p class="product-price">$489.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('Galatea Eau de Parfum', 'imagenes/galateaalhambra.jpg', 'Una fragancia opulenta y floral. Combina notas de salida frutales con un corazón rico en flores blancas como nardos y jazmín. La base es amaderada y dulce con notas de sándalo y haba tonka.')">
+                    <img src="imagenes/galateaalhambra.jpg" alt="Galatea Eau de Parfum" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">Galatea Eau de Parfum Spray Maison Alhambra Model</h2>
+                        <p class="product-price">$599.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+                <div class="product-card" onclick="openModal('The Icon Antonio Banderas', 'imagenes/theiconperfume.jpg', 'Una fragancia amaderada oriental para el hombre moderno. Las notas de salida son bergamota y pimienta negra. El corazón es de salvia y lavanda. El fondo es intenso con haba tonka y sándalo.')">
+                    <img src="imagenes/theiconperfume.jpg" alt="The Icon Antonio Banderas" class="product-image">
+                    <div class="product-info">
+                        <h2 class="product-name">The Icon 100 Ml EDP Spray Antonio Banderas</h2>
+                        <p class="product-price">$529.00 c/u</p>
+                        <div class="view-details-btn">Ver Detalles</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <img id="modalImage" src="" alt="Imagen del perfume" class="modal-img">
+            <h2 id="modalTitle" class="modal-title"></h2>
+            <p id="modalDescription" class="modal-description"></p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Aromas Frescos. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Obtener los elementos de la ventana modal
+        const modal = document.getElementById('productModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalImage = document.getElementById('modalImage');
+        const modalDescription = document.getElementById('modalDescription');
+
+        // Función para abrir la ventana modal y poblarla con datos
+        function openModal(title, imageUrl, description) {
+            modalTitle.textContent = title;
+            modalImage.src = imageUrl;
+            modalDescription.textContent = description;
+            modal.style.display = 'flex'; // Cambiar a flex para centrar contenido
+        }
+
+        // Función para cerrar la ventana modal
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // Cerrar la ventana modal si el usuario hace clic fuera del contenido
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+</body>
+</html>
